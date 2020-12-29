@@ -1,4 +1,4 @@
-#  LAMP stack built with Docker Compose
+#  Proxy de Servicios de AFIP
 
   
 
@@ -6,15 +6,14 @@
 
   
 
-A basic LAMP stack environment built using Docker Compose. It consists of the following:
+Basado en un Docker container de 
 
-* PHP
+* PHP 7.4 (con opciones de otras versiones )
 * Apache
-* MySQL
-* phpMyAdmin
-* Redis
+* MySQL 8 
+* adminer
 
-As of now, we have several different PHP versions. Use appropriate php version as needed:
+Las versiones de  PHP disponibles son:
 
 * 5.4.x
 * 5.6.x
@@ -22,25 +21,21 @@ As of now, we have several different PHP versions. Use appropriate php version a
 * 7.2.x
 * 7.3.x
 * 7.4.x
-* 8.0.x WIP waiting for dependencies to introduce php8 support
 
-> Please note that we simplified the project structure from several branches for each php version, to one centralized master branch. Please let us know if you encouter any problems. 
-##  Installation
+##  Instalacion
  
-* Clone this repository on your local computer
-* configure .env as needed 
-* Run the `docker-compose up -d`.
+* Clonar el repositorio
+* configurar .env segun se crea necesario
+* Ejecutar `docker-compose up -d`.
 
 ```shell
-git clone https://github.com/sprintcube/docker-compose-lamp.git
-cd docker-compose-lamp/
+git clone https://github.com/dnlbertoni/proxy-afip.git
+cd proxy-afip/
 cp sample.env .env
-// modify sample.env as needed
 docker-compose up -d
-// visit localhost
 ```
 
-Your LAMP stack is now ready!! You can access it via `http://localhost`.
+La APP se encutran disponible en `http://localhost`.
 
 ##  Configuration and Usage
 
@@ -152,19 +147,8 @@ http://localhost:8080/
 username: root  
 password: tiger
 
-## Redis
-
-It comes with Redis. It runs on default port `6379`.
-
 ## Contributing
 We are happy if you want to create a pull request or help people with their issues. If you want to create a PR, please remember that this stack is not built for production usage, and changes should good for general purpose and not overspecialized. 
 > Please note that we simplified the project structure from several branches for each php version, to one centralized master branch.  Please create your PR against master branch. 
 > 
-Thank you! 
-
-## Why you shouldn't use this stack unmodified in production
-We want to empower developers to quickly create creative Applications. Therefore we are providing an easy to set up a local development environment for several different Frameworks and PHP Versions. 
-In Production you should modify at a minimum the following subjects:
-
-* php handler: mod_php=> php-fpm
-* secure mysql users with proper source IP limitations
+Gracias! 
