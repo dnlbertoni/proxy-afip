@@ -3,3 +3,5 @@
 /data/*
 /logs/*
 .DS_Store
+/app/cert/*.ppk
+/app/cert/*.pub
