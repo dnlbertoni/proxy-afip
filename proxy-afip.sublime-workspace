@@ -43,15 +43,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "app/public/index.php",
-			"settings":
-			{
-				"buffer_size": 101,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -64,6 +55,10 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
 			[
 				"Snippet: fun",
 				"Snippet: Function"
@@ -111,22 +106,40 @@
 	[
 		"/home/danielbertoni/Documents/Proyectos/proxy-afip",
 		"/home/danielbertoni/Documents/Proyectos/proxy-afip/app",
-		"/home/danielbertoni/Documents/Proyectos/proxy-afip/app/cert",
-		"/home/danielbertoni/Documents/Proyectos/proxy-afip/app/public",
-		"/home/danielbertoni/Documents/Proyectos/proxy-afip/app/srv"
+		"/home/danielbertoni/Documents/Proyectos/proxy-afip/app/migraciones",
+		"/home/danielbertoni/Documents/Proyectos/proxy-afip/config"
 	],
 	"file_history":
 	[
+		"/home/danielbertoni/Documents/Proyectos/proxy-afip/app/public/index.php",
+		"/home/danielbertoni/Documents/Proyectos/proxy-afip/app/wsaa.class.php",
+		"/home/danielbertoni/Documents/Proyectos/proxy-afip/app/srv/wsaa.class.php",
+		"/home/danielbertoni/Documents/Proyectos/proxy-afip/app/migraciones/06 - alter_empresas",
+		"/home/danielbertoni/Documents/Proyectos/proxy-afip/app/data/cert/danielbertoniproxyafip20268667033.csr",
+		"/home/danielbertoni/Documents/Proyectos/proxy-afip/.gitignore",
+		"/home/danielbertoni/.config/mimeapps.list",
+		"/home/danielbertoni/Documents/Proyectos/proxy-afip/app/conf/database.php",
+		"/home/danielbertoni/Documents/Proyectos/proxy-afip/app/migrations/03 - create_certificados.sql",
+		"/home/danielbertoni/Documents/Proyectos/proxy-afip/app/migrations/01 - empresa.sql",
+		"/home/danielbertoni/Documents/Proyectos/proxy-afip/app/migrations/05 - parametros.sql",
+		"/home/danielbertoni/Documents/Proyectos/proxy-afip/app/migrations/04 - servicios.sql",
+		"/home/danielbertoni/Documents/Proyectos/proxy-afip/app/migrations/02 - entornos.sql",
+		"/home/danielbertoni/Documents/Proyectos/proxy-afip/app/migrations/03 - certificados.sql",
+		"/home/danielbertoni/Documents/Proyectos/proxy-afip/app/modelos/Servicio.php",
+		"/home/danielbertoni/Documents/Proyectos/proxy-afip/app/modelos/Entorno.php",
+		"/home/danielbertoni/Documents/Proyectos/proxy-afip/app/modelos/Servicios.php",
+		"/home/danielbertoni/Documents/Proyectos/proxy-afip/app/modelos/Empresa.php",
+		"/home/danielbertoni/Documents/Proyectos/proxy-afip/app/migrations/empresa.sql",
+		"/home/danielbertoni/.config/sublime-text-3/Packages/PhpCodeGen/phpcodegen.sublime-settings",
+		"/home/danielbertoni/.config/sublime-text-3/Packages/PHP Companion/PHP Companion.sublime-settings",
 		"/home/danielbertoni/Documents/Proyectos/proxy-afip/app/srv/Certs.php",
 		"/home/danielbertoni/Documents/Proyectos/proxy-afip/app/cert/generarCert.sh",
 		"/home/danielbertoni/Documents/Proyectos/proxy-afip/app/srv/certificados_comandos.php",
 		"/media/danielbertoni/data1tb/afipws/app_old/certificados_comandos.php",
 		"/home/danielbertoni/Documents/Proyectos/proxy-afip/app/generarCert.sh",
 		"/home/danielbertoni/Documents/Proyectos/proxy-afip/config/vhosts/default.conf",
-		"/home/danielbertoni/Documents/Proyectos/proxy-afip/app/public/index.php",
 		"/home/danielbertoni/Documents/Proyectos/proxy-afip/config/php/php.ini",
 		"/home/danielbertoni/Documents/Proyectos/proxy-afip/README.md",
-		"/home/danielbertoni/Documents/Proyectos/proxy-afip/.gitignore",
 		"/home/danielbertoni/Documents/Proyectos/proxy-afip/docker-compose.yml",
 		"/media/danielbertoni/data1tb/proxy-afip/docker-compose.yml",
 		"/home/danielbertoni/Documents/Proyectos/proxy-afip/.env",
@@ -211,42 +224,8 @@
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "app/public/index.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 101,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								101,
-								101
-							]
-						],
-						"settings":
-						{
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/PHP/PHP.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				}
 			]
 		}
 	],
