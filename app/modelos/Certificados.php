@@ -1,7 +1,7 @@
 <?php
 
 namespace Servicio;
-require_once ("../../conf/database.php");
+require_once ("../conf/database.php");
 require_once ("Certificado.php");
 
 

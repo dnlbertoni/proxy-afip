@@ -43,6 +43,24 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "app/modelos/Certificados.php",
+			"settings":
+			{
+				"buffer_size": 8108,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "1\n1.1 - ver a que se refiere con usuario expirado (confiremar si es que estan activo s pero hace banda que se conectaron)\n1.2 - esot es SO o DB?\n1.3 - esto lo tiene que hacer Dani g\n1.4 - ver si lo hace el DBA\n1.5 - no vamos a realizar ninguna accion por el momento\n2\n2.1 - lo hariamos en test me parace primero\n2.2 - lo hariamos\n2.3 - que es?, mas info\n2.4 - ver con infraestrucutra para unir al dominio lso server de db\n3\n3.1 - avisarle a infraestrucutra que adapte a los valores. cuales serian los valroes adecuados?\n3.2 - avisarle a infraestrucutra que adapte a los valores. cuales serian los valroes adecuados?\n3.3 - tareas para DBA frecuentes\n4 \n4.1 - corregir DBA\n4.2 - ver si hay $$$ para el data recovery. definicion por parte de dilfer\n4.3 - corregir DBA\n4.4 - corregir DBA, ver el costo de implemtenacion en espacio\n5\n5.1 - corregir DBA. se puede automatizar?\n5.2 - se puede hacer un sp para autocompilar?\n5.3 - crear un usuario cronjob desde infraestructura\n5.4 - vert de hacerlo DBA junto con Infraestructura\n5.5 - ",
+			"settings":
+			{
+				"buffer_size": 1028,
+				"line_ending": "Unix",
+				"name": "1"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -107,6 +125,7 @@
 		"/home/danielbertoni/Documents/Proyectos/proxy-afip",
 		"/home/danielbertoni/Documents/Proyectos/proxy-afip/app",
 		"/home/danielbertoni/Documents/Proyectos/proxy-afip/app/migraciones",
+		"/home/danielbertoni/Documents/Proyectos/proxy-afip/app/srv",
 		"/home/danielbertoni/Documents/Proyectos/proxy-afip/config"
 	],
 	"file_history":
@@ -224,8 +243,71 @@
 	"groups":
 	[
 		{
+			"selected": 1,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "app/modelos/Certificados.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 8108,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								42,
+								42
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1028,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								311,
+								311
+							]
+						],
+						"settings":
+						{
+							"auto_name": "1",
+							"incomplete_sync": null,
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
 			]
 		}
 	],
