@@ -155,8 +155,8 @@ class Entornos{
     public function getActual($idempresa){
         if( $this->db->isConnected() ){
             $this->setSql("byActual");
-            $sql = sprintf($this->getSql());
-            $rs = $this->db->Query($sql, $idempresa);
+            $sql = sprintf($this->getSql(), $idempresa);
+            $rs = $this->db->Query($sql);
             if($rs !=null ){
                 $data = new \ArrayObject();
                 if($rs->NumRows() > 0 ){

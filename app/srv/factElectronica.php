@@ -6,7 +6,7 @@
  * Time: 14:30
  */
 
-require_once '../clases/exceptionhandler.php';
+//require_once '../clases/exceptionhandler.php';
 require_once '../clases/wsaa.class.php';
 require_once '../clases/wsfev1.class.php';
 

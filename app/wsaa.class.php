@@ -164,30 +164,34 @@ class WSAA {
    * devuelve el CMS
    */
   private function sign_TRA(){
-    $fileTRA = $this->path.$this->pathTRA.$this->getEmpresa();
-    $STATUS = openssl_pkcs7_sign($fileTRA . ".xml", $fileTRA . ".tmp", "file://".$this->path.$this->cert, array("file://".$this->path.$this->privatekey, $this->passphrase), array(),!PKCS7_DETACHED );
-    //echo $fileTRA . ".xml" . "<br/>";
-    if (!$STATUS){
-        throw new Exception("ERROR generando firma PKCS#7 ");
+    if(empty($this->error)){
+      $fileTRA = $this->path.$this->pathTRA.$this->getEmpresa();
+      $STATUS = openssl_pkcs7_sign($fileTRA . ".xml", $fileTRA . ".tmp", "file://".$this->path.$this->cert, array("file://".$this->path.$this->privatekey, $this->passphrase), array(),!PKCS7_DETACHED );
+      //echo $fileTRA . ".xml" . "<br/>";
+      if (!$STATUS){
+          throw new Exception("ERROR generando firma PKCS#7 ");
+      }
+      $inf = fopen($this->path.$this->pathTRA.$this->getEmpresa().".tmp", "r");
+      $i = 0;
+      $CMS = "";
+      while (!feof($inf)){
+          $buffer = fgets($inf);
+          if ( $i++ >= 4 ) $CMS .= $buffer;
+      }
+      fclose($inf);
+      unlink($this->path.$this->pathTRA.$this->getEmpresa().".tmp");
+      return $CMS;      
+    }else{
+      return $this->error;
     }
-    $inf = fopen($this->path.$this->pathTRA.$this->getEmpresa().".tmp", "r");
-    $i = 0;
-    $CMS = "";
-    while (!feof($inf)){
-        $buffer = fgets($inf);
-        if ( $i++ >= 4 ) $CMS .= $buffer;
-    }
-    fclose($inf);
-    unlink($this->path.$this->pathTRA.$this->getEmpresa().".tmp");
-    return $CMS;
   }
   
   /**
    * Conecta con el web service y obtiene el token y sign
    */
-  private function call_WSAA($cms)
-  {     
-    $results = $this->client->loginCms(array('in0' => $cms));
+  private function call_WSAA(){
+
+    $results = $this->client->loginCms(array('in0' => $this->sign_TRA()));
     
     // para logueo
     file_put_contents($this->path."request-loginCms.xml", $this->client->__getLastRequest());

@@ -1,6 +1,6 @@
 <?php
 
-namespace Servicio;
+namespace Certificado;
 
 class Certificado{
     private $id;

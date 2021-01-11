@@ -1,7 +1,8 @@
 <?php
 
 namespace Empresa;
-require_once (__DIR__."../../conf/database.php");
+
+require_once (__DIR__.'/'."../conf/database.php");
 require_once (__DIR__."/Empresa.php");
 
 

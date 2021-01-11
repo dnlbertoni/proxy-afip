@@ -1,6 +1,6 @@
 <?php
 
-namespace Servicio;
+namespace Certificado;
 require_once ("../conf/database.php");
 require_once ("Certificado.php");
 
@@ -18,6 +18,7 @@ class Certificados{
         $this->db = new \DataBase(MYSQL_HOST,MYSQL_DB,MYSQL_USER,MYSQL_PASS);
         $this->db->Connect();
     }
+
     public function insert($certificado=null){
         if (is_object($certificado)){
             if( $this->db->isConnected() ){
@@ -93,7 +94,7 @@ class Certificados{
                 if($rs->NumRows() > 0 ){
                     while($r=$rs->Fetch()){
                         $data->append(
-                            new Certificado( $rs->Fields['id'],
+                            new Certificado\Certificado( $rs->Fields['id'],
                                              $rs->Fields['idempresa'],
                                              $rs->Fields['identorno'],
                                              $rs->Fields['filename'],
