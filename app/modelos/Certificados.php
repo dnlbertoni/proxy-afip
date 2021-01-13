@@ -158,7 +158,7 @@ class Certificados{
                 $data = new \ArrayObject();
                 if($rs->NumRows() > 0 ){
                     while($r=$rs->Fetch()){
-                        $data->append(new Certificado( $rs->Fields['id'],
+                        $data = new Certificado( $rs->Fields['id'],
                             $rs->Fields['idempresa'],
                             $rs->Fields['identorno'],
                             $rs->Fields['filename'],
@@ -167,7 +167,7 @@ class Certificados{
                             $rs->Fields['activo'],
                             $rs->Fields['fechaemision'],
                             $rs->Fields['fechavencimiento']
-                        ));
+                        );
                     };
                     return $data;
                 }else{
@@ -211,9 +211,9 @@ class Certificados{
                 break;
             case "certificadoEntorno":
                 $sql = "select c.* from certificados c 
-                                inner join entornos e   on e.id=s.identorno
+                                inner join entornos e   on e.id=c.identorno
                                 inner join empresas emp on emp.id=c.idempresa
-                                where c.activo=1 and emp.activo=1 and e.id=%d and c.tipo='%s' and c.idempresa=%d";
+                                where c.activo=1 and emp.activo=1 and e.id=%d and c.tipo='%s' and c.idempresa=%d limit 1";
                 break;
             default:
                 $sql = "select c.* from certificados c 

@@ -10,7 +10,7 @@ $empresa = "20268667033";
  * Ejemplo WSAA
  * ********************/
 
-$wsaa = new WSAA($empresa);
+$wsaa = new WSAA($empresa, 'wsfev1');
 
 $rs=$wsaa->Token();
 var_dump($rs);
@@ -21,4 +21,4 @@ var_dump($rs);
  * ********************
  */
 
-$wsfev1 = new WSFEV1( './', $empresa );
+//$wsfev1 = new WSFEV1( './', $empresa );

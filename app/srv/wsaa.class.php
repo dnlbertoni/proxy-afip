@@ -31,12 +31,12 @@ class WSAA {
   private $passphrase;
   
 
-  public function __construct($cuit=null,$servicioDeNegocio=null){
+  public function __construct($cuit=null,$servicioDeNegocio){
       $this->service = $servicioDeNegocio;
       $this->Archivos = new ArrayObject();
-      $pathCert       = __DIR__ ."../data/cert/";
-      $pathXML        = __DIR__ ."../data/xml/";
-      $pathDebug      = __DIR__ ."../data/debug/";
+      $pathCert       = __DIR__ ."/../data/cert/";
+      $pathXML        = __DIR__ ."/../data/xml/";
+      $pathDebug      = __DIR__ ."/../data/debug/";
 
 
       if($cuit !=null){
@@ -67,29 +67,41 @@ class WSAA {
                     $this->passphrase = $this->certificadoLocal->getPasswordCertificado();
 
                     /**** defino los nombres de los archivos en funcion de la configuracion ***/
-                    $this->Archivos->append(array('cert'       => $pathCert.$this->certificadoAFIP->getFilename()));
-                    $this->Archivos->append(array('privatekey' => $pathCert.$this->certificadoLocal->getFilename()));
-                    $this->Archivos->append(array('wdsl'       => $this->servicioLogin->getFileWsdl()));
-                    $this->Archivos->append(array('ta'         => $pathXML."TA_".$this->entorno->getNombre().$this->empresa->getCuit().".xml"));
-                    $this->Archivos->append(array('tra'        => $pathXML."TRA_".$this->entorno->getNombre().$this->empresa->getCuit().".xml"));
-                    $this->Archivos->append(array('traTMP'     => $pathXML."TRA_".$this->entorno->getNombre().$this->empresa->getCuit().".tmp"));
-                    $this->Archivos->append(array('debugOUT'   => $pathDebug."request-loginCms".$this->entorno->getNombre().$this->empresa->getCuit().".xml"));
-                    $this->Archivos->append(array('debugIN'    => $pathDebug."response-loginCms".$this->entorno->getNombre().$this->empresa->getCuit().".xml"));
+                    $this->Archivos = array('cert'       => $pathCert.$this->certificadoAFIP->getFilename(),
+                                            'privatekey' => $pathCert.$this->certificadoLocal->getFilename(),
+                                            'wdsl'       => $this->servicioLogin->getFileWsdl(),
+                                            'ta'         => $pathXML."TA_".$this->entorno->getNombre().$this->empresa->getCuit().".xml",
+                                            'tra'        => $pathXML."TRA_".$this->entorno->getNombre().$this->empresa->getCuit().".xml",
+                                            'traTMP'     => $pathXML."TRA_".$this->entorno->getNombre().$this->empresa->getCuit().".tmp",
+                                            'debugOUT'   => $pathDebug."request-loginCms".$this->entorno->getNombre().$this->empresa->getCuit().".xml",
+                                            'debugIN'    => $pathDebug."response-loginCms".$this->entorno->getNombre().$this->empresa->getCuit().".xml");
+
+
+//var_dump($this->Archivos);die();
 
                     // validar archivos necesarios
-                    if (!file_exists($this->Archivos['cert'])) $this->error .= " Error de Apertura ". $this->Archivos['cert'];
-                    if (!file_exists($this->Archivos['privatekey'])) $this->error .= " Error de Apertura ".$this->Archivos['privatekey'];
-                    if (!file_exists($this->Archivos['wsdl'])) $this->error .= " Error de Apertura ".$this->Archivos['wsdl'];
-                    if(!empty($this->error)) {
-                        throw new Exception('WSAA class. Faltan archivos necesarios para el funcionamiento.' . $this->error);
+                    if (!file_exists($this->Archivos['cert'])){
+                      $this->error['ErrorCode']    = 1009; // 
+                      $this->error['ErrorMessage'] = " Error de Apertura ". $this->Archivos['cert'];
+                    } else{
+                      if (!file_exists($this->Archivos['privatekey'])){
+                        $this->error['ErrorCode']    = 1010; // 
+                        $this->error['ErrorMessage'] = " Error de Apertura ".$this->Archivos['privatekey'];
+                      } else{
+                        if (!file_exists($this->Archivos['wsdl'])){                         
+                          $this->error['ErrorCode']    = 1011; // 
+                          $this->error['ErrorMessage'] = " Error de Apertura ".$this->Archivos['wsdl'];
+                        } else{
+                          $this->client = new SoapClient($this->Archivos['wsdl'] , array(
+                                  'soap_version'   => SOAP_1_2,
+                                  'location'       => $this->servicioLogin->getUrl(),
+                                  'trace'          => 1,
+                                  'exceptions'     => 0
+                              )
+                          );                                      
+                        }
+                      }
                     }
-                    $this->client = new SoapClient($this->Archivos['wsdl'] , array(
-                            'soap_version'   => SOAP_1_2,
-                            'location'       => $this->servicioLogin->getUrl(),
-                            'trace'          => 1,
-                            'exceptions'     => 0
-                        )
-                    );                
                   }else{
                     $this->error['ErrorCode']=1005; // 
                     $this->error['ErrorMessage']= 'El certificado Local no esta configurado para esa empresa y entorno';                  
