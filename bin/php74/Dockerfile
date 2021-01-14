@@ -58,6 +58,7 @@ RUN docker-php-ext-install pdo_mysql && \
     docker-php-ext-install tokenizer && \
     docker-php-ext-install json && \
     docker-php-ext-install zip && \
+    docker-php-ext-install soap && \
     docker-php-ext-install -j$(nproc) intl && \
     docker-php-ext-install mbstring && \
     docker-php-ext-install gettext && \

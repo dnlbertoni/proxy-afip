@@ -37,6 +37,7 @@ class WSAA {
       $pathCert       = __DIR__ ."/../data/cert/";
       $pathXML        = __DIR__ ."/../data/xml/";
       $pathDebug      = __DIR__ ."/../data/debug/";
+      $pathWsdl       = __DIR__ ."/../data/wsdl/";
 
 
       if($cuit !=null){
@@ -67,17 +68,14 @@ class WSAA {
                     $this->passphrase = $this->certificadoLocal->getPasswordCertificado();
 
                     /**** defino los nombres de los archivos en funcion de la configuracion ***/
-                    $this->Archivos = array('cert'       => $pathCert.$this->certificadoAFIP->getFilename(),
-                                            'privatekey' => $pathCert.$this->certificadoLocal->getFilename(),
-                                            'wdsl'       => $this->servicioLogin->getFileWsdl(),
+                    $this->Archivos = array('cert'       => $pathCert . $this->certificadoAFIP->getFilename(),
+                                            'privatekey' => $pathCert . $this->certificadoLocal->getFilename(),
+                                            'wsdl'       => $pathWsdl . $this->servicioLogin->getFileWsdl(),
                                             'ta'         => $pathXML."TA_".$this->entorno->getNombre().$this->empresa->getCuit().".xml",
                                             'tra'        => $pathXML."TRA_".$this->entorno->getNombre().$this->empresa->getCuit().".xml",
                                             'traTMP'     => $pathXML."TRA_".$this->entorno->getNombre().$this->empresa->getCuit().".tmp",
                                             'debugOUT'   => $pathDebug."request-loginCms".$this->entorno->getNombre().$this->empresa->getCuit().".xml",
                                             'debugIN'    => $pathDebug."response-loginCms".$this->entorno->getNombre().$this->empresa->getCuit().".xml");
-
-
-//var_dump($this->Archivos);die();
 
                     // validar archivos necesarios
                     if (!file_exists($this->Archivos['cert'])){
@@ -90,7 +88,7 @@ class WSAA {
                       } else{
                         if (!file_exists($this->Archivos['wsdl'])){                         
                           $this->error['ErrorCode']    = 1011; // 
-                          $this->error['ErrorMessage'] = " Error de Apertura ".$this->Archivos['wsdl'];
+                          $this->error['ErrorMessage'] = " Error de Apertura ->". $this->Archivos['wsdl'];
                         } else{
                           $this->client = new SoapClient($this->Archivos['wsdl'] , array(
                                   'soap_version'   => SOAP_1_2,
