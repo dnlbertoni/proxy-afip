@@ -35,7 +35,7 @@ cp sample.env .env
 docker-compose up -d
 ```
 
-La APP se encutran disponible en `http://localhost`.
+La APP se encuentra disponible en `http://localhost`.
 
 ##  Configuration and Usage
 

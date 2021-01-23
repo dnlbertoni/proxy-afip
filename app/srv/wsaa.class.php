@@ -139,7 +139,7 @@ class WSAA {
       $TRA->addChild('service', $this->service);
       $TRA->asXML($this->Archivos['tra']);      
     }else{
-      return $this->error;
+      return false;
     }
   }
   
@@ -147,7 +147,9 @@ class WSAA {
    * Borra el archivo xml de TRA
    */
   private function delete_TRA(){
-      unlink($this->Archivos['tra']);
+      if(file_exists($this->Archivos['tra'])){
+        unlink($this->Archivos['tra']);      
+      }
       return true;
   }
    
@@ -161,32 +163,42 @@ class WSAA {
    */
   private function sign_TRA(){
     if(empty($this->error)){
-      $STATUS = openssl_pkcs7_sign($this->Archivos['tra'], $this->Archivos['traTMP'], "file://".$this->Archivos['cert'], array("file://".$this->Archivos['privatekey'], $this->passphrase), array(),!PKCS7_DETACHED );
-      //echo $fileTRA . ".xml" . "<br/>";
-      if (!$STATUS){
-          $this->error['ErrorCode']=1007; // 
-          $this->error['ErrorMessage']= "EERROR generando firma PKCS#7 ";     
-          return $this->error;           
-      }
-
-      $inf = fopen($this->Archivos['traTMP'], "r");
-      if($inf){
-        $i = 0;
-        $CMS = "";
-        while (!feof($inf)){
-            $buffer = fgets($inf);
-            if ( $i++ >= 4 ) $CMS .= $buffer;
+      if(file_exists($this->Archivos['tra'])){
+        $STATUS = openssl_pkcs7_sign( $this->Archivos['tra'], 
+                                      $this->Archivos['traTMP'], 
+                                      "file://".realpath($this->Archivos['cert']), 
+                                      array(  "file://".realpath($this->Archivos['privatekey']), 
+                                              ''), 
+                                      array(),
+                                      !PKCS7_DETACHED );
+        if (!$STATUS){
+            $this->error['ErrorCode']=1007; // 
+            $this->error['ErrorMessage']= "EERROR generando firma PKCS#7 ";     
+            return false;          
         }
-        fclose($inf);
-        unlink($this->Archivos['traTMP']);
-        return $CMS;              
+        $inf = fopen($this->Archivos['traTMP'], "r");
+        if($inf){
+          $i = 0;
+          $CMS = "";
+          while (!feof($inf)){
+              $buffer = fgets($inf);
+              if ( $i++ >= 4 ) $CMS .= $buffer;
+          }
+          fclose($inf);
+          unlink($this->Archivos['traTMP']);
+          return $CMS;                      
+        }else{
+            $this->error['ErrorCode']=1008; // 
+            $this->error['ErrorMessage']= "Error al abrir el archivo ".$this->Archivos['traTMP'];     
+            return false;                  
+        }
       }else{
-          $this->error['ErrorCode']=1008; // 
-          $this->error['ErrorMessage']= "Error al abrir el archivo".$this->Archivos['traTMP'];     
-          return $this->error;                   
+            $this->error['ErrorCode']=1013; // 
+            $this->error['ErrorMessage']= "Error al abrir el archivo ".$this->Archivos['tra'];     
+            return false;                          
       }
     }else{
-      return $this->error;
+      return false;
     }
   }
 
@@ -197,8 +209,9 @@ class WSAA {
      * @throws Exception
      */
   private function call_WSAA(){
+    $CMS=$this->sign_TRA();
     if(empty($this->error)){
-      $results = $this->client->loginCms(array('in0' => $this->sign_TRA()));
+      $results = $this->client->loginCms(array('in0' => $CMS));
       
       // para logueo
         if($this->LOG_XMLS){
@@ -215,7 +228,7 @@ class WSAA {
         return $results->loginCmsReturn;
       }      
     }else{
-      return $this->error;                         
+      return false;                        
     }
   }
   
@@ -231,22 +244,29 @@ class WSAA {
       if(empty($this->error)){
         //llamo al WS
         $TA = $this->call_WSAA( );
-
-        //verifico contenido del respuesta                      
-        if (!file_put_contents($this->Archivos['ta'], $TA)){
-          $this->error['ErrorCode']=1006; // 
-          $this->error['ErrorMessage']= "Error al generar al archivo ".$this->Archivos['ta'];                
-          return $this->error;      
+        if(empty($this->error)){
+          //verifico contenido del respuesta                      
+          if (!file_put_contents($this->Archivos['ta'], $TA)){
+            $this->error['ErrorCode']=1006; // 
+            $this->error['ErrorMessage']= "Error al generar al archivo ".$this->Archivos['ta'];                
+            return false;     
+          }else{
+            if(empty($this->error)){
+              // almaceno el xml devulto
+              $this->TA = $this->xml2Array($TA);
+              return $this->TA['header']['expirationTime'];      
+            }else{
+              return false;                                     
+            }
+          }                  
         }else{
-          // almaceno el xml devulto
-          $this->TA = $this->xml2Array($TA);
-          return $this->TA['header']['expirationTime'];      
-        }        
+          return false;                        
+        }
       }else{
-        return $this->error;              
+        return false;              
       }
     }else{
-      return $this->error;      
+      return false;      
     }
   }
   
@@ -257,23 +277,38 @@ class WSAA {
   private function get_expiration() {
     if(empty($this->error)){
       // si no esta en memoria abrirlo
-      if(empty($this->TA)) {             
-        $TA_file = file($this->Archivos['ta'], FILE_IGNORE_NEW_LINES);
-        
-        if($TA_file) {
-          $TA_xml = '';
-          for($i=0; $i < sizeof($TA_file); $i++)
-            $TA_xml.= $TA_file[$i];        
-          $this->TA = $this->xml2Array($TA_xml);
-          $r = $this->TA['header']['expirationTime'];
-        } else {
-          $r = false;
-        }      
+      if(empty($this->TA)) { 
+          if(empty($this->error)){
+            if(file_exists($this->Archivos['ta'])){
+              $TA_file = file($this->Archivos['ta'], FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);            
+            }else{
+              $TA_file = false;
+            }
+            if($TA_file) {
+              $TA_xml = '';
+              for($i=0; $i < sizeof($TA_file); $i++)
+                $TA_xml.= $TA_file[$i];  
+              if(empty($this->error)){
+                $this->TA = $this->xml2Array($TA_xml);
+              }else{
+                $r = false;                 
+              }
+              if(empty($this->error)){
+                $r = $this->TA['header']['expirationTime'];              
+              }else{
+                $r = false; 
+              }
+            } else {
+              $r = false;
+            } 
+          }else{
+            $r=false;            
+          }
       } else {
         $r = $this->TA['header']['expirationTime'];
       }      
     }else{
-      $r=$this->error;
+      $r=false;
     }
     return $r;     
   }
@@ -281,12 +316,20 @@ class WSAA {
   public function Token(){
     if(empty($this->error)){
       if( $this->get_expiration() < date("Y-m-d h:m:i") ) {
-        return $this->generar_TA();
+        if(empty($this->error)){        
+          return $this->generar_TA();
+        }else{
+          return false;         
+        }
       } else {
-        return $this->get_expiration();
+        if(empty($this->error)){
+          return $this->get_expiration();          
+        }else{
+          return false;
+        }
       };
     }else{
-      return $this->error;
+      return false;
     }
   }
 
@@ -294,8 +337,12 @@ class WSAA {
    * Convertir un XML a Array
    */
   private function xml2array($xml) {    
-    $json = json_encode( simplexml_load_string($xml));
-    return json_decode($json, TRUE);
+    if(empty($this->error)){
+      $json = json_encode( simplexml_load_string($xml));
+      return json_decode($json, TRUE);      
+    }else{
+      return false;
+    }
   }    
   
 

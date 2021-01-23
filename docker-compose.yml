@@ -3,6 +3,7 @@ services:
   webserver:
     build:
       context: './bin/${PHPVERSION}'
+#    image: php:7.4.14-apache
     container_name: '${COMPOSE_PROJECT_NAME}-${PHPVERSION}'
     restart: always
     ports:

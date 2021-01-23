@@ -63,7 +63,7 @@ class ResultSet {
     var $Eof;
     var $CurRec;
 
-    function ResultSet ($stmt) {
+    function __construct($stmt) {
         $this->Fields = null;
         $this->Eof = true;
         $this->Stmt = $stmt;
