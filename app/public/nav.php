@@ -1,4 +1,8 @@
-<nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark" aria-label="Main navigation">
+<?php
+$titulo=(empty($titulo))?"":$titulo;
+?>
+<header >
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Main navigation">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">Proxy-AFIP - <?=$titulo?></a>
     <button class="navbar-toggler p-0 border-0" type="button" data-bs-toggle="offcanvas" aria-label="Toggle navigation">
@@ -34,4 +38,5 @@
       </form>
     </div>
   </div>
-</nav>
+</nav> 
+</header>

@@ -1,23 +1,25 @@
 <?php
-    require_once '../../../conf/include.all.php';
-    require_once ("../../../modelos/Empresas.php");
+require_once ("../../lib/mysql/mysql.class.php");
+require_once ("../../modelos/Entornos.php");
 
 /** parseo los inputs */
 $accion = $_POST['accion'];
-$empresa = new \Empresa\Empresa();
-$empresa->setId(isset($_POST['id'])?$_POST['id']:null);
-$empresa->setRazonSocial(isset($_POST['razon_social'])?$_POST['razon_social']:null);
-$empresa->setCuit(isset($_POST['cuit'])?$_POST['cuit']:null);
-$empresa->setActivo(isset($_POST['activo'])?$_POST['activo']:null);
+$entorno = new \Config\Entorno();
 
-$empresas = new \Empresa\Empresas();
+$entorno->setId(isset($_POST['id'])?$_POST['id']:null);
+$entorno->setNombre(isset($_POST['nombre'])?$_POST['nombre']:null);
+$entorno->setIdempresa(isset($_POST['idempresa'])?$_POST['idempresa']:null);
+$entorno->setDebugActivo(isset($_POST['debug_activo'])?$_POST['debug_activo']:null);
+$entorno->setActual(isset($_POST['actual'])?$_POST['actual']:null);
+
+$entornos = new \Config\Entornos();
 
 $data['res']['code']=99;
 $data['res']['message']='Sin Accion definida';
 
 switch ($accion){
     case 'add':
-        $id=$empresas->insert($empresa);
+        $id=$entornos->insert($entorno);
         if($id){
             $data['res']['code']=10;
             $data['res']['message']=$id;
@@ -27,23 +29,23 @@ switch ($accion){
         }
         break;
     case "edit":
-        $id=$empresas->update($empresa);
-        if($id){
-            $data['res']['code']=10;
-            $data['res']['message']=$id;
-        }else{
-            $data['res']['code']=11;
-            $data['res']['message']='No se pudo actualizar';
-        }
-        break;
-    case "del":
-        $id=$empresas->delete($empresa);
+        $id=$entornos->update($entorno);
         if($id){
             $data['res']['code']=10;
             $data['res']['message']=$id;
         }else{
             $data['res']['code']=11;
             $data['res']['message']='No se pudo borrar';
+        }
+        break;
+    case "del":
+        $id=$entornos->delete($entorno);
+        if($id){
+            $data['res']['code']=10;
+            $data['res']['message']=$id;
+        }else{
+            $data['res']['code']=11;
+            $data['res']['message']='No se pudo actualizar';
         }
         break;
 }

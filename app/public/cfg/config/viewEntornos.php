@@ -1,30 +1,21 @@
 <?php
-    require_once '../../../conf/include.all.php';
-    require_once ("../../../modelos/Empresas.php");
+require_once ("../../lib/mysql/mysql.class.php");
+require_once ("../../modelos/Entornos.php");
+require_once ("../../modelos/Empresas.php");
 
-if(isset($_GET['idempresa'])){
-    $empresas = new \Empresa\Empresas();
-    $data= $empresas->getById($_GET['idempresa']);
+$empresas =  new \Empresa\Empresas();
+$empresasSel = $empresas->getEmpresas();
+
+
+if(isset($_GET['identorno'])){
+    $entornos = new \Config\Entornos();
+    $data= $entornos->getById($_GET['identorno']);
     $accion=(isset($_GET['accion']))?$_GET['accion']:'view';
 }else{
-    $data= new Empresa\Empresa();
+    $data= new \Config\Entorno();
     $accion='add';
 }
-switch ($accion){
-    case "add":
-        $nombreAccion="Agregar";
-        break;
-    case "edit":
-        $nombreAccion="Editar";
-        break;
-    case "view":
-        $nombreAccion="Ver";
-        break;
-    case "del":
-        $nombreAccion="Borrar";
-        break;
-}
-$titulo="Empresas";
+
 ?>
 <!doctype html>
 <html lang="es">
@@ -36,15 +27,14 @@ $titulo="Empresas";
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/css/all.min.css">
 
-    <title><?= $titulo ?> - <?= $nombreAccion?></title>
+    <title>Configuracion - Entorno - Agregar</title>
 </head>
 <body>
-        <?php include('../../nav.php');?>
 <div class="container">
-    <h1><?= $titulo ?> - <?= $nombreAccion?></h1>
+    <h1>Entorno</h1>
     <div class="row">
         <div class="col-12">
-            <form method="post" action="crud.php" enctype="multipart/form-data" id="form-ajax">
+            <form method="post" action="crudEntornos.php" enctype="multipart/form-data" id="form-ajax">
                 <input type="hidden" value="<?=$accion?>" name="accion"/>
                 <div class="form-group row">
                     <label for="id" class="col-5 col-form-label">ID</label>
@@ -55,20 +45,20 @@ $titulo="Empresas";
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="razon_social" class="col-5 col-form-label">Razon Social</label>
+                    <label for="razon_social" class="col-5 col-form-label">Nombre</label>
                     <div class="col-7">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">
-                                    <i class="fa fa-house-user"></i>
+                                    <i class="fa fa-engine"></i>
                                 </div>
                             </div>
-                            <input id="razon_social" name="razon_social" placeholder="Razon Social" type="text" class="form-control" required="required" value="<?=$data->getRazonSocial();?>">
+                            <input id="nombre" name="nombre" placeholder="Nombre" type="text" class="form-control" required="required" value="<?=$data->getNombre();?>">
                         </div>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="cuit" class="col-5 col-form-label">CUIT</label>
+                    <label for="idempresa" class="col-5 col-form-label">Empresa</label>
                     <div class="col-7">
                         <div class="input-group">
                             <div class="input-group-prepend">
@@ -76,20 +66,37 @@ $titulo="Empresas";
                                     <i class="fa fa-qrcode"></i>
                                 </div>
                             </div>
-                            <input id="cuit" name="cuit" placeholder="CUIT" type="text" class="form-control" required="required" value="<?=$data->getCuit(); ?>">
+                            <select name="idempresa" id="idempresa" lass="form-control" required="required">
+                                <?php foreach ($empresasSel as $s):?>
+                                    <option value="<?=$s->getId()?>" <?=($s->getId()==$data->getIdempresa())?"selected='selected'":""?>><?=$s->getRazonSocial()?></option>
+                                <?php endforeach;?>
+                            </select>
                         </div>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-5">Activo</label>
+                    <label class="col-5">Debug</label>
                     <div class="col-7">
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input name="activo" id="activo_0" type="radio" class="custom-control-input" value="1" <?=($data->getActivo()==1)?'checked="checked"':'';?>>
-                            <label for="activo_0" class="custom-control-label">Si</label>
+                            <input name="debug_activo" id="debug_activo_0" type="radio" class="custom-control-input" value="1" <?=($data->getDebugActivo()==1)?'checked="checked"':'';?>>
+                            <label for="debug_activo_0" class="custom-control-label">Si</label>
                         </div>
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input name="activo" id="activo_1" type="radio" class="custom-control-input" value="0"<?=($data->getActivo()==0)?'checked="checked"':'';?>>
-                            <label for="activo_1" class="custom-control-label">No</label>
+                            <input name="debug_activo" id="debug_activo_1" type="radio" class="custom-control-input" value="0"<?=($data->getDebugActivo()==0)?'checked="checked"':'';?>>
+                            <label for="debug_activo_1" class="custom-control-label">No</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-5">Actual</label>
+                    <div class="col-7">
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input name="actual" id="actual_0" type="radio" class="custom-control-input" value="1" <?=($data->getActual()==1)?'checked="checked"':'';?>>
+                            <label for="actual_0" class="custom-control-label">Si</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input name="actual" id="actual_1" type="radio" class="custom-control-input" value="0"<?=($data->getActual()==0)?'checked="checked"':'';?>>
+                            <label for="actual_1" class="custom-control-label">No</label>
                         </div>
                     </div>
                 </div>

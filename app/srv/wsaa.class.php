@@ -52,6 +52,8 @@ class WSAA {
 
           // seteos en php
           ini_set("soap.wsdl_cache_enabled", "0");
+          ini_set('soap.wsdl_cache_ttl',0);
+          ini_set("default_socket_timeout", 120);
 
           if(is_object($this->empresa)){
               // Busco el entorno activo que tiene la empresa
@@ -64,6 +66,7 @@ class WSAA {
                 if(is_object($this->certificadoAFIP)){
                   //busco el certificado local, el que se subio a la afip para generar
                   $this->certificadoLocal = $certificados->getCertificadoEntorno( $this->entorno->getId(),'PRIVATEKEY', $this->empresa->getId());
+
                   if (is_object($this->certificadoLocal)){
                     $this->passphrase = $this->certificadoLocal->getPasswordCertificado();
 
@@ -220,6 +223,7 @@ class WSAA {
         }
 
       if (is_soap_fault($results)){
+          var_dump($results);
           $this->error['ErrorCode']=$results->faultcode;
           $this->error['ErrorMessage']= $results->faultstring;
           return false;   

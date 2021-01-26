@@ -1,8 +1,8 @@
 <?php
 
 namespace Certificado;
-require_once ("../conf/database.php");
-require_once ("Certificado.php");
+require_once (__DIR__.'/'."../conf/database.php");
+require_once (__DIR__.'/'."Certificado.php");
 
 
 class Certificados{
@@ -31,7 +31,8 @@ class Certificados{
                             $certificado->getPasswordCertificado(),
                             $certificado->getActivo(),
                             $certificado->getfechaemision(),
-                            $certificado->getFechavencimiento()
+                            $certificado->getFechavencimiento(),
+                            $certificado->getCertificadoRaw()
                 );
                 $rs = $this->db->Query($sql);
                 if($rs !=null ){
@@ -51,6 +52,32 @@ class Certificados{
         }
     }
 
+    public function delete($certificado=null){
+        if (is_object($certificado)){
+            if( $this->db->isConnected() ){
+                $this->setSql('delete');
+                $sql = sprintf($this->getSql(), 
+                            $certificado->getId()
+                );
+                $rs = $this->db->Query($sql);
+                if($rs !=null ){
+                    if($rs->AffectedRows()>0){
+                        return true;
+                    }else{
+                        return false;
+                    }
+                }else{
+                    return false;
+                }
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
+    }
+
+
     public function update($certificado=null){
         if (is_object($certificado)){
             if( $this->db->isConnected() ){
@@ -64,6 +91,7 @@ class Certificados{
                     $certificado->getActivo(),
                     $certificado->getfechaemision(),
                     $certificado->getFechavencimiento(),
+                    $certificado->getCertificadoRaw(),
                     $certificado->getId()
                 );
                 $rs = $this->db->Query($sql);
@@ -94,7 +122,7 @@ class Certificados{
                 if($rs->NumRows() > 0 ){
                     while($r=$rs->Fetch()){
                         $data->append(
-                            new Certificado\Certificado( $rs->Fields['id'],
+                            new Certificado( $rs->Fields['id'],
                                              $rs->Fields['idempresa'],
                                              $rs->Fields['identorno'],
                                              $rs->Fields['filename'],
@@ -135,7 +163,8 @@ class Certificados{
                         $rs->Fields['password_certificado'],
                         $rs->Fields['activo'],
                         $rs->Fields['fechaemision'],
-                        $rs->Fields['fechavencimiento']
+                        $rs->Fields['fechavencimiento'],
+                        $rs->Fields['certifcado_raw']
                     );
                 };
                 return $data;
@@ -166,7 +195,8 @@ class Certificados{
                             $rs->Fields['password_certificado'],
                             $rs->Fields['activo'],
                             $rs->Fields['fechaemision'],
-                            $rs->Fields['fechavencimiento']
+                            $rs->Fields['fechavencimiento'],
+                            $rs->Fields['certifcado_raw']
                         );
                     };
                     return $data;
@@ -197,18 +227,24 @@ class Certificados{
                 $sql = "select * from certificados where id=%s";
                 break;
             case "insert":
-                $sql = "insert into certificados ( nombre,identorno,file_wsdl, version, file_doc, url) 
-                                        values   ('%s'  ,%d       , '%s'    ,'%s'    ,'%s'     ,'%s')";
+                $sql = "insert into certificados ( idempresa ,identorno ,filename ,tipo ,password_certificado ,activo ,fechaemision ,fechavencimiento ,certificado_raw)   
+                                        values   (%d         ,%d        ,'%s'     ,'%s' ,'%s'                 ,%d     ,'%s'         ,'%s'             ,'%s')";
                 break;
             case "update":
-                $sql = "update certificados set    nombre='%s',
-                                                identorno=%d,
-                                                file_wsdl='%s',
-                                                version='%s',
-                                                file_doc='%s',
-                                                url='%s'                                                
+                $sql = "update certificados set idempresa=%d ,
+                                                identorno=%d ,
+                                                filename='%s' ,
+                                                tipo='%s' ,
+                                                password_certificado='%s' ,
+                                                activo=%d ,
+                                                fechaemision='%s' ,
+                                                fechavencimiento='%s', 
+                                                certificado_raw='%s'
                                         where id=%d";
                 break;
+            case "delete":
+                $sql = "delete from certificados where id=%d";
+                break;                
             case "certificadoEntorno":
                 $sql = "select c.* from certificados c 
                                 inner join entornos e   on e.id=c.identorno
@@ -217,7 +253,7 @@ class Certificados{
                 break;
             default:
                 $sql = "select c.* from certificados c 
-                                inner join entornos e   on e.id=s.identorno
+                                inner join entornos e   on e.id=c.identorno
                                 inner join empresas emp on emp.id=c.idempresa";
                 break;
         }

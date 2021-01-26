@@ -14,11 +14,12 @@
 
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/css/all.min.css">
-    <title>Empresa</title>
+    <title><?= $titulo ?></title>
 </head>
 <body>
     <?php include('../../nav.php');?>
 <div class="container">
+        <h1><?= $titulo ?> </h1>
     <div class="row">
         <div class="col-sm">
             <table class="table">

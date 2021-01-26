@@ -77,5 +77,7 @@ libpng-dev && \
 # Enable apache modules
 RUN a2enmod rewrite headers
 
+COPY ../../config/ssl/openssl.cnf /etc/ssl/openssl.cnf
+
 # Cleanup
 RUN rm -rf /usr/src/*

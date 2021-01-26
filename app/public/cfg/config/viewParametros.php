@@ -1,13 +1,13 @@
 <?php
-    require_once '../../../conf/include.all.php';
-    require_once ("../../../modelos/Empresas.php");
+require_once ("../../lib/mysql/mysql.class.php");
+require_once ("../../modelos/Parametros.php");
 
-if(isset($_GET['idempresa'])){
-    $empresas = new \Empresa\Empresas();
-    $data= $empresas->getById($_GET['idempresa']);
+if(isset($_GET['idparametro'])){
+    $parametros = new \Config\Parametros();
+    $data= $parametros->getById($_GET['idparametro']);
     $accion=(isset($_GET['accion']))?$_GET['accion']:'view';
 }else{
-    $data= new Empresa\Empresa();
+    $data= new \Config\Parametro();
     $accion='add';
 }
 switch ($accion){
@@ -24,7 +24,6 @@ switch ($accion){
         $nombreAccion="Borrar";
         break;
 }
-$titulo="Empresas";
 ?>
 <!doctype html>
 <html lang="es">
@@ -36,15 +35,14 @@ $titulo="Empresas";
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/css/all.min.css">
 
-    <title><?= $titulo ?> - <?= $nombreAccion?></title>
+    <title>Configuracion - Parametros - <?=$nombreAccion?></title>
 </head>
 <body>
-        <?php include('../../nav.php');?>
 <div class="container">
-    <h1><?= $titulo ?> - <?= $nombreAccion?></h1>
+    <h1>Parametro - <?=$nombreAccion?></h1>
     <div class="row">
         <div class="col-12">
-            <form method="post" action="crud.php" enctype="multipart/form-data" id="form-ajax">
+            <form method="post" action="crudParametros.php" enctype="multipart/form-data" id="form-ajax">
                 <input type="hidden" value="<?=$accion?>" name="accion"/>
                 <div class="form-group row">
                     <label for="id" class="col-5 col-form-label">ID</label>
@@ -55,41 +53,28 @@ $titulo="Empresas";
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="razon_social" class="col-5 col-form-label">Razon Social</label>
+                    <label for="nombre" class="col-5 col-form-label">Nombre</label>
                     <div class="col-7">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">
-                                    <i class="fa fa-house-user"></i>
+                                    <i class="fa fa-engine"></i>
                                 </div>
                             </div>
-                            <input id="razon_social" name="razon_social" placeholder="Razon Social" type="text" class="form-control" required="required" value="<?=$data->getRazonSocial();?>">
+                            <input id="nombre" name="nombre" placeholder="Nombre" type="text" class="form-control" required="required" value="<?=$data->getNombre();?>">
                         </div>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="cuit" class="col-5 col-form-label">CUIT</label>
+                    <label for="valor" class="col-5 col-form-label">Valor</label>
                     <div class="col-7">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">
-                                    <i class="fa fa-qrcode"></i>
+                                    <i class="fa fa-engine"></i>
                                 </div>
                             </div>
-                            <input id="cuit" name="cuit" placeholder="CUIT" type="text" class="form-control" required="required" value="<?=$data->getCuit(); ?>">
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-5">Activo</label>
-                    <div class="col-7">
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input name="activo" id="activo_0" type="radio" class="custom-control-input" value="1" <?=($data->getActivo()==1)?'checked="checked"':'';?>>
-                            <label for="activo_0" class="custom-control-label">Si</label>
-                        </div>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input name="activo" id="activo_1" type="radio" class="custom-control-input" value="0"<?=($data->getActivo()==0)?'checked="checked"':'';?>>
-                            <label for="activo_1" class="custom-control-label">No</label>
+                            <input id="valor" name="valor" placeholder="Valor" type="text" class="form-control" required="required" value="<?=$data->getValor();?>">
                         </div>
                     </div>
                 </div>

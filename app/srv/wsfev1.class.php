@@ -3,6 +3,7 @@ require_once ("../modelos/Empresas.php");
 require_once ("../modelos/Servicios.php");
 require_once ("../modelos/Entornos.php");
 require_once ("../modelos/Certificados.php");
+require_once ("wsaa.class.php");
 
 class WSFEV1 {
   //const CUITDNL = "20268667033";              # C U I T del emisor de las facturas dnl
@@ -25,6 +26,7 @@ class WSFEV1 {
     private $passphrase;
     private $LOG_XMLS;
     private $TA;
+    private $wsaa;
 
   /*
    * Constructor
@@ -40,7 +42,7 @@ class WSFEV1 {
           /*** levanto los modelos ***/
           $empresas = new \Empresa\Empresas();
           $entornos = new \Config\Entornos();
-          $certificados = new \Servicio\Certificados();
+          $certificados = new \Certificado\Certificados();
           $servicios = new \Servicio\Servicios();
 
           $this->empresa = $empresas->getByCuit($cuit);
@@ -72,6 +74,7 @@ class WSFEV1 {
 
               while (!empty($this->error)) {
                   try {
+                      $wsaa = new WSAA($cuit, 'wsfe');
                       $this->client = new SoapClient($this->WSDL, array(
                               'soap_version' => SOAP_1_2,
                               'location' => $this->servicio->getUrl(),
@@ -130,9 +133,13 @@ class WSFEV1 {
    */
   public function openTA()
   {
-    $this->TA = simplexml_load_file($this->Archivos['ta']);
-    
-    return $this->TA == false ? false : true;
+    $vto=$wsaa->Token();
+    if(empty($wsaa->error)){
+      $this->TA = simplexml_load_file($this->Archivos['ta']);     
+      return $this->TA == false ? false : true;
+    }else{
+      return false;
+    }
   }
 
   /****************** a partir de ahora son el parseo de cada metodo del WS **********************/

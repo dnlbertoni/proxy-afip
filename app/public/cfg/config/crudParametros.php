@@ -1,23 +1,23 @@
 <?php
-    require_once '../../../conf/include.all.php';
-    require_once ("../../../modelos/Empresas.php");
+require_once ("../../lib/mysql/mysql.class.php");
+require_once ("../../modelos/Parametros.php");
 
 /** parseo los inputs */
 $accion = $_POST['accion'];
-$empresa = new \Empresa\Empresa();
-$empresa->setId(isset($_POST['id'])?$_POST['id']:null);
-$empresa->setRazonSocial(isset($_POST['razon_social'])?$_POST['razon_social']:null);
-$empresa->setCuit(isset($_POST['cuit'])?$_POST['cuit']:null);
-$empresa->setActivo(isset($_POST['activo'])?$_POST['activo']:null);
+$parametro = new \Config\Parametro();
 
-$empresas = new \Empresa\Empresas();
+$parametro->setId(isset($_POST['id'])?$_POST['id']:null);
+$parametro->setNombre(isset($_POST['nombre'])?$_POST['nombre']:null);
+$parametro->setValor(isset($_POST['valor'])?$_POST['valor']:null);
+
+$parametros= new \Config\Parametros();
 
 $data['res']['code']=99;
 $data['res']['message']='Sin Accion definida';
 
 switch ($accion){
     case 'add':
-        $id=$empresas->insert($empresa);
+        $id=$parametros->insert($parametro);
         if($id){
             $data['res']['code']=10;
             $data['res']['message']=$id;
@@ -27,23 +27,23 @@ switch ($accion){
         }
         break;
     case "edit":
-        $id=$empresas->update($empresa);
-        if($id){
-            $data['res']['code']=10;
-            $data['res']['message']=$id;
-        }else{
-            $data['res']['code']=11;
-            $data['res']['message']='No se pudo actualizar';
-        }
-        break;
-    case "del":
-        $id=$empresas->delete($empresa);
+        $id=$parametros->update($parametro);
         if($id){
             $data['res']['code']=10;
             $data['res']['message']=$id;
         }else{
             $data['res']['code']=11;
             $data['res']['message']='No se pudo borrar';
+        }
+        break;
+    case "del":
+        $id=$parametros->delete($parametro);
+        if($id){
+            $data['res']['code']=10;
+            $data['res']['message']=$id;
+        }else{
+            $data['res']['code']=11;
+            $data['res']['message']='No se pudo actualizar';
         }
         break;
 }

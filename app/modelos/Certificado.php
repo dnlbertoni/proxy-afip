@@ -12,6 +12,7 @@ class Certificado{
     private $activo;
     private $fechaemision;
     private $fechavencimiento;
+    private $certificado_raw;
 
     /**
      * Certificado constructor.
@@ -24,8 +25,9 @@ class Certificado{
      * @param $activo
      * @param $fechaemision
      * @param $fechavencimiento
+     * @param $certificado_raw     
      */
-    public function __construct($id=null, $idempresa=null, $identorno=null, $filename=null, $tipo=null, $password_certificado=null, $activo=null, $fechaemision=null, $fechavencimiento=null)
+    public function __construct($id=null, $idempresa=null, $identorno=null, $filename=null, $tipo=null, $password_certificado=null, $activo=null, $fechaemision=null, $fechavencimiento=null, $certificado_raw=null)
     {
         $this->id = $id;
         $this->idempresa = $idempresa;
@@ -36,6 +38,7 @@ class Certificado{
         $this->activo = $activo;
         $this->fechaemision = $fechaemision;
         $this->fechavencimiento = $fechavencimiento;
+        $this->certificado_raw = $certificado_raw;
     }
 
     /**
@@ -182,5 +185,20 @@ class Certificado{
         $this->fechavencimiento = $fechavencimiento;
     }
 
+    /**
+     * @return null
+     */
+    public function getCertificadoRaw()
+    {
+        return $this->certificado_raw;
+    }
+
+    /**
+     * @param null $fechavencimiento
+     */
+    public function setCertificadoRaw($certificado_raw)
+    {
+        $this->certificado_raw = $certificado_raw;
+    }
 
 }
