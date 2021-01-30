@@ -1,8 +1,8 @@
 <?php
-require_once ("../../lib/mysql/mysql.class.php");
-require_once ("../../modelos/Servicios.php");
-require_once ("../../modelos/Entornos.php");
-require_once ("../../modelos/Empresas.php");
+    require_once '../../../conf/include.all.php';
+require_once ("../../../modelos/Servicios.php");
+require_once ("../../../modelos/Entornos.php");
+require_once ("../../../modelos/Empresas.php");
 
 $entornos =  new \Config\Entornos();
 $entornosSel = $entornos->getEntornos();
@@ -32,6 +32,7 @@ switch ($accion){
         $nombreAccion="Borrar";
         break;
 }
+
 ?>
 <!doctype html>
 <html lang="es">
@@ -145,12 +146,12 @@ switch ($accion){
                     <label for="file_doc" class="col-5 col-form-label">Archivo Documentacion</label>
                     <div class="col-7">
                         <div class="input-group">
-                            <div class="input-group-prepend">
+                            <input id="file_doc" name="file_doc" placeholder="Archivo Documentacion" type="file" class="form-control"  value="<?=$data->getFileDoc();?>">
+                            <div class="input-group-append" id="btn-chg-doc">
                                 <div class="input-group-text">
-                                    <i class="fa fa-house-user"></i>
+                                    <i class="fa fa-file"></i>
                                 </div>
                             </div>
-                            <input id="file_doc" name="file_doc" placeholder="Archivo Documentaciones" type="text" class="form-control" value="<?=$data->getFileDoc();?>">
                         </div>
                     </div>
                 </div>

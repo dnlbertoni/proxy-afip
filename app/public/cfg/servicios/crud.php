@@ -1,7 +1,7 @@
 <?php
-require_once ("../../lib/mysql/mysql.class.php");
-require_once ("../../modelos/Servicios.php");
-require_once ("../../lib/archivos/upload.class.php");
+require_once '../../../conf/include.all.php';
+require_once ("../../../modelos/Servicios.php");
+require_once ("../../../lib/archivos/upload.class.php");
 
 /** parseo los inputs */
 $accion = $_POST['accion'];
@@ -19,16 +19,19 @@ $servicios = new \Servicio\Servicios();
 
 $data['res']['code']=99;
 $data['res']['message']='Sin Accion definida';
-
+$error=false;
 switch ($accion){
     case 'add':
+        $rta_file=0;
         foreach ($_FILES as $idx=>$file ){
             switch ($idx){
                 case "file_wsdl":
-                    $dir=__DIR__.'/../../data/wsdl'; // ver como levantarlo de configuraciones
+                    $dir=__DIR__.'/../../../data/wsdl'; // ver como levantarlo de configuraciones
+                    $fileExtension = 'wsdl';
                     break;
                 case "file_doc":
-                    $dir=__DIR__.'/../../data/doc'; // ver como levantarlo de configuraciones
+                    $dir=__DIR__.'/../../../data/doc'; // ver como levantarlo de configuraciones
+                    $fileExtension = strtolower(end($fileNameCmps));
                     break;
                 default:
                     $error = true;
@@ -40,13 +43,13 @@ switch ($accion){
                 $fileSize = $_FILES[$idx]['size'];
                 $fileType = $_FILES[$idx]['type'];
                 $fileNameCmps = explode(".", $fileName);
-                $fileExtension = strtolower(end($fileNameCmps));
 
                 $subir = new Upload($idx);
-                $nombre = $servicio->getNombre() . $fileExtension;
+                $nombre = $servicio->getNombre() . '_'.$servicio->getIdentorno().'.' .$fileExtension;
                 $subir->setDir($dir);
                 $subir->setExtensions('.'.$fileExtension);
-                $subir->copyFile($nombre);
+                $rta_file += $subir->copyFile($nombre);
+                $error_archivo=$subir->getErrorMessage();
                 switch ($idx){
                     case "file_wsdl":
                         $servicio->setFileWsdl($subir->getFilename());
@@ -57,23 +60,28 @@ switch ($accion){
                 }
             }
         }
-        $id=$servicios->insert($servicio);
-        if($id){
-            $data['res']['code']=10;
-            $data['res']['message']=$id;
+        if($rta_file==0){
+            $id=$servicios->insert($servicio);
+            if($id){
+                $data['res']['code']=10;
+                $data['res']['message']=$id;
+            }else{
+                $data['res']['code']=11;
+                $data['res']['message']='Nose pudo Insertar';
+            }            
         }else{
-            $data['res']['code']=11;
-            $data['res']['message']='Nose pudo Insertar';
+                $data['res']['code']=10 + $rta_file;
+                $data['res']['message']=$error_archivo;            
         }
         break;
     case "edit":
         foreach ($_FILES as $idx=>$file ){
             switch ($idx){
                 case "file_wsdl":
-                    $dir=__DIR__.'/../../data/wsdl'; // ver como levantarlo de configuraciones
+                    $dir=__DIR__.'/../../../data/wsdl'; // ver como levantarlo de configuraciones
                     break;
                 case "file_doc":
-                    $dir=__DIR__.'/../../data/doc'; // ver como levantarlo de configuraciones
+                    $dir=__DIR__.'/../../../data/doc'; // ver como levantarlo de configuraciones
                     break;
                 default:
                     $error = true;

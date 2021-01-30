@@ -1,7 +1,7 @@
 <?php
-    require_once ("../../lib/mysql/mysql.class.php");
-    require_once ("../../modelos/Servicios.php");
-    require_once ("../../modelos/Entornos.php");
+    require_once '../../../conf/include.all.php';
+    require_once ("../../../modelos/Servicios.php");
+    require_once ("../../../modelos/Entornos.php");
     $servicios = new \Servicio\Servicios();
     $data= $servicios->getServicios();
 
@@ -59,7 +59,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="4"><a href="/app/servicios/view.php" class="btn btn-outline-success"><i class="fa fa-plus-circle"></i> Agregar </a></td>
+                        <td colspan="4"><a href="/cfg/servicios/view.php" class="btn btn-outline-success"><i class="fa fa-plus-circle"></i> Agregar </a></td>
                         <td colspan="4"><a href="/index.php" class="btn btn-outline-danger"><i class="fa fa-window-close"></i> Volver</a></td>
 
                     </tr>

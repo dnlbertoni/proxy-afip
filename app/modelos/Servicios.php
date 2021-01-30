@@ -29,7 +29,9 @@ class Servicios{
                     $servicio->getFileWsdl(),
                     $servicio->getVersion(),
                     $servicio->getFileDoc(),
-                    $servicio->getUrl());
+                    $servicio->getUrl(),
+                    $servicio->getIdentorno()                    
+                );
                 $rs = $this->db->Query($sql);
                 if($rs !=null ){
                     if($rs->AffectedRows()>0){

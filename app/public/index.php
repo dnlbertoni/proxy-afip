@@ -51,7 +51,7 @@
 		          <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
 		          <p class="card-text">
 					<button type="button" class="btn btn-outline-info and-all-other-classes"> 
-					  <a href="/cfg/serv/" style="color:inherit"> Ingresar </a>
+					  <a href="/cfg/servicios/" style="color:inherit"> Ingresar </a>
 					</button>
 		          </p>
 

@@ -1,7 +1,7 @@
 <?php
 
 namespace Config;
-require_once (__DIR__."../../conf/database.php");
+require_once (__DIR__.'/'."../conf/database.php");
 require_once (__DIR__."/Entorno.php");
 
 

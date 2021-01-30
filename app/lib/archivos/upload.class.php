@@ -18,6 +18,7 @@ class Upload {
     var $cls_tipo_archivo;           // file type (application)
     var $cls_accepted;
     var $cls_file_ext;
+    var $esDesconocido=true;
 
 	/** upload()
     ** Constructor de la Clase upload.
@@ -37,7 +38,7 @@ class Upload {
 		$this->cls_domain_check = 0;
 		$this->cls_overWrite = $ow;
 		$this->cls_rename_file = $rename;
-        $this->cls_referer_domain = $_SERVER['HTTP_ORIGIN'];
+        $this->cls_referer_domain = (isset($_SERVER['HTTP_ORIGIN']))?$_SERVER['HTTP_ORIGIN']:$_SERVER['HTTP_REFERER'];
 		$this->cls_max_filesize = $MAX_FILE_SIZE;
         $this->cls_tipo_archivo = $this->esDesconocido;
         $this->cls_file_ext = '';
@@ -48,7 +49,7 @@ class Upload {
             $this->cls_file = $_FILES[$myfile]['tmp_name'];
     		$this->cls_filename =  $_FILES[$myfile]['name'];
             $this->cls_file_type =  $_FILES[$myfile]['type'];
-    		$this->cls_filesize = $_FILES[$myfile]['size'];             
+    		$this->cls_filesize = $_FILES[$myfile]['size'];          
         }
       
   	}
@@ -77,7 +78,6 @@ class Upload {
         // corregir el nombre del archivo solo en estos casos
         $this->cls_filename = preg_replace("/ /", "_", $this->cls_filename);
         $this->cls_filename = preg_replace("/%20/", "_", $this->cls_filename);
-        
         $extension = strtolower($this->getExtension($this->getFilename()));        
         
         // Chequear si la extension es v�lida
@@ -181,7 +181,7 @@ class Upload {
 		global $HTTP_REFERER;        
 		$url=parse_url($HTTP_REFERER);
 		//$this_domain = $url["scheme"]."://".$url["host"]; //get domain script is called from
-        $this_domain = $_SERVER['HTTP_ORIGIN'];
+        $this_domain = $_SERVER['HTTP_REFERER'];
         $this->changeFilename($uploaded_name);
 
 		if(!empty($this->cls_file)) {
@@ -207,7 +207,7 @@ class Upload {
 		} else {
 			$this->cls_errorCode = (!empty($this->cls_filename)) ? 2: 8;
 		}
-		return (!$this->cls_errorCode);
+		return $this->cls_errorCode;
 	}
 
 	/** resumeCopy()
@@ -245,7 +245,7 @@ class Upload {
 		if(empty($new_name)) {
 			$extension = $this->getExtension($this->cls_copyfile);
 			$new_name = rndName(30);
-			$new_name.= strtolower($extension);
+			$new_name.= '.'.strtolower($extension);
 		}
 		$this->cls_filename = $new_name;
 		return ($this->cls_upload_dir ."/$new_name");

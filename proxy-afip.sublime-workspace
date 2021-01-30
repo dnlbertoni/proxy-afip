@@ -47,7 +47,7 @@
 			"file": "app/modelos/Certificados.php",
 			"settings":
 			{
-				"buffer_size": 8125,
+				"buffer_size": 9530,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -252,7 +252,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 8125,
+						"buffer_size": 9530,
 						"regions":
 						{
 						},
