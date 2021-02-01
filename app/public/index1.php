@@ -21,7 +21,8 @@ var_dump($rs);
  * Ejemplo WSFEv1
  * ********************
  */
-$wsfev1 = new WsBasic($empresa, 'wsfev1');
-$rs =$wsfev1->Dummy();
-var_dump($rs);
+$wsfev1 = new WSFEV1($empresa);
+$rs =$wsfev1->solicitarCAE(1,6);
+header('Content-Type: application/json');
+echo json_encode($rs);
 

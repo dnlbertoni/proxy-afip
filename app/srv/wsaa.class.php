@@ -1,6 +1,5 @@
 <?php
 
-
 require_once ("../modelos/Empresas.php");
 require_once ("../modelos/Entornos.php");
 require_once ("../modelos/Servicios.php");
@@ -77,8 +76,8 @@ class WSAA {
                                             'ta'         => $pathXML."TA_".$this->entorno->getNombre().$this->empresa->getCuit().".xml",
                                             'tra'        => $pathXML."TRA_".$this->entorno->getNombre().$this->empresa->getCuit().".xml",
                                             'traTMP'     => $pathXML."TRA_".$this->entorno->getNombre().$this->empresa->getCuit().".tmp",
-                                            'debugOUT'   => $pathDebug."request-loginCms".$this->entorno->getNombre().$this->empresa->getCuit().".xml",
-                                            'debugIN'    => $pathDebug."response-loginCms".$this->entorno->getNombre().$this->empresa->getCuit().".xml");
+                                            'debugOUT'   => $pathDebug."request-login_".$this->entorno->getNombre().$this->empresa->getCuit().".xml",
+                                            'debugIN'    => $pathDebug."response-login_".$this->entorno->getNombre().$this->empresa->getCuit().".xml");
 
                     // validar archivos necesarios
                     if (!file_exists($this->Archivos['cert'])){
@@ -220,10 +219,10 @@ class WSAA {
         if($this->LOG_XMLS){
             file_put_contents($this->Archivos['debugOUT'], $this->client->__getLastRequest());
             file_put_contents($this->Archivos['debugIN'], $this->client->__getLastResponse());
+
         }
 
       if (is_soap_fault($results)){
-          var_dump($results);
           $this->error['ErrorCode']=$results->faultcode;
           $this->error['ErrorMessage']= $results->faultstring;
           return false;   
@@ -317,6 +316,18 @@ class WSAA {
     return $r;     
   }
    
+  /*
+   * Convertir un XML a Array
+   */
+  private function xml2array($xml) {    
+    if(empty($this->error)){
+      $json = json_encode( simplexml_load_string($xml));
+      return json_decode($json, TRUE);      
+    }else{
+      return false;
+    }
+  }   
+
   public function Token(){
     if(empty($this->error)){
       if( $this->get_expiration() < date("Y-m-d h:m:i") ) {
@@ -336,18 +347,4 @@ class WSAA {
       return false;
     }
   }
-
-  /*
-   * Convertir un XML a Array
-   */
-  private function xml2array($xml) {    
-    if(empty($this->error)){
-      $json = json_encode( simplexml_load_string($xml));
-      return json_decode($json, TRUE);      
-    }else{
-      return false;
-    }
-  }    
-  
-
 }

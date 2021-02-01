@@ -50,6 +50,10 @@ class WsBasic {
           ini_set("soap.wsdl_cache_enabled", "0");
           ini_set('soap.wsdl_cache_ttl',0);
           ini_set("default_socket_timeout", 120);
+
+          /*** WS para loguear ***/
+          $this->wsaa = new WSAA($cuit, $this->service);
+          
           if(is_object($this->servicio)){
             if(is_object($this->empresa)){
                 // Busco el entorno activo que tiene la empresa
@@ -73,8 +77,8 @@ class WsBasic {
                                               'ta'         => $pathXML."TA_".$this->entorno->getNombre().$this->empresa->getCuit().".xml",
                                               'tra'        => $pathXML."TRA_".$this->entorno->getNombre().$this->empresa->getCuit().".xml",
                                               'traTMP'     => $pathXML."TRA_".$this->entorno->getNombre().$this->empresa->getCuit().".tmp",
-                                              'debugOUT'   => $pathDebug."request-loginCms".$this->entorno->getNombre().$this->empresa->getCuit().".xml",
-                                              'debugIN'    => $pathDebug."response-loginCms".$this->entorno->getNombre().$this->empresa->getCuit().".xml");
+                                              'debugOUT'   => $pathDebug."request-".$this->service."_".$this->entorno->getNombre().$this->empresa->getCuit().".xml",
+                                              'debugIN'    => $pathDebug."response-".$this->service."_".$this->entorno->getNombre().$this->empresa->getCuit().".xml");
 
                       // validar archivos necesarios
                       if (!file_exists($this->Archivos['cert'])){
@@ -138,36 +142,52 @@ class WsBasic {
      * @throws Exception
      */
   private function _checkErrors($results, $method){
+    $XXX=$method.'Result';
     if ($this->LOG_XMLS) {
       file_put_contents(sprintf($this->Archivos['debugOUT'],$method),$this->client->__getLastRequest());
       file_put_contents(sprintf($this->Archivos['debugIN'],$method),$this->client->__getLastResponse());
     }
     
     if (is_soap_fault($results)) {
-      throw new Exception('WSFEV1 class. Error Cadena: ' . $results->faultcode.' '.$results->faultstring);
+          $this->error['ErrorCode']    = $results->faultcode;
+          $this->error['ErrorMessage'] = $results->faultstring;
+          return false;   
     }
-
-    $XXX=$method.'Result';
-    if ($results->$XXX->RError->percode != 0) {
-        $this->error = "Method=$method errcode=".$results->$XXX->RError->percode." errmsg=".$results->$XXX->RError->perrmsg;
+    if(isset($results->$XXX->Errors)){
+        $this->error = $results->$XXX->Errors;
+        return false;
+    }else{
+      return true;
     }
-    
-    return $results->$XXX->RError->percode != 0 ? true : false;
   }
 
   /**
    * Abre el archivo de TA xml,
    * si hay algun problema devuelve false
    */
-  public function openTA()
-  {
-    $vto=$wsaa->Token();
-    if(empty($wsaa->error)){
+  public function openTA() {
+    $vto=$this->wsaa->Token();
+
+    if(empty($this->error)){
       $this->TA = simplexml_load_file($this->Archivos['ta']);     
-      return $this->TA == false ? false : true;
+      if($this->TA == false){
+        $this->error['ErrorCode']=1021; // 
+        $this->error['ErrorMessage']= 'Error al abrir el Archivo TA.';
+        return false;
+      }else{
+        return true;
+      }
     }else{
       return false;
     }
+  }
+
+  public function getAuth(){ //veo cuando no abri TA
+    $auth =array(   'Token'    => $this->TA->credentials->token,
+                     'Sign'     => $this->TA->credentials->sign,
+                     'Cuit'     => $this->empresa->getCuit()
+                );
+    return $auth;
   }
 
   /****************** a partir de ahora son el parseo de cada metodo del WS **********************/
@@ -177,16 +197,27 @@ class WsBasic {
      * Retorna la cantidad maxima de registros de detalle que
      * puede tener una invocacion al FEAutorizarRequest
      */
+  /*
   public function Dummy(){
         if(empty($this->error)){
           $results = $this->client->FEDummy();
-          try {
-              $e = $this->_checkErrors($results, 'FEDummy');
-          } catch (Exception $e) {
-          }
-          return array('App' => $results->FEDummyResult->AppServer, 'DB' => $results->FEDummyResult->DbServer, 'Auth' => $results->FEDummyResult->AuthServer);        
+          return (array) $results->FEDummyResult;        
         }else{
           return $this->error;
-        }
+        }        
     }
+
+  public function getTiposComprobantes(){
+    $this->openTA();
+    if(empty($this->error)){
+      $results = $this->client->FEParamGetTiposCbte(
+          array(  'Auth'     =>  $this->getAuth() )
+      );
+      
+      return $results->FEParamGetTiposCbteResult->ResultGet->CbteTipo;
+    }else{
+      return $this->error;
+    }
+  }
+*/
 } // END class

@@ -31,6 +31,7 @@ switch ($accion){
                     break;
                 case "file_doc":
                     $dir=__DIR__.'/../../../data/doc'; // ver como levantarlo de configuraciones
+                    $fileNameCmps = explode(".", $file['name']);
                     $fileExtension = strtolower(end($fileNameCmps));
                     break;
                 default:
