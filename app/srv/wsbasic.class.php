@@ -165,7 +165,7 @@ class WsBasic {
    * Abre el archivo de TA xml,
    * si hay algun problema devuelve false
    */
-  public function openTA() {
+  private function openTA() {
     $vto=$this->wsaa->Token();
 
     if(empty($this->error)){
@@ -182,7 +182,7 @@ class WsBasic {
     }
   }
 
-  public function getAuth(){ //veo cuando no abri TA
+  private function getAuth(){ //veo cuando no abri TA
     $auth =array(   'Token'    => $this->TA->credentials->token,
                      'Sign'     => $this->TA->credentials->sign,
                      'Cuit'     => $this->empresa->getCuit()
