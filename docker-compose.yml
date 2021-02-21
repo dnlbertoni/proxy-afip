@@ -20,7 +20,9 @@ services:
       PMA_PORT: '${HOST_MACHINE_PMA_PORT}'
 
   database:
-    image: mysql:8
+##compatibilidad server viejos
+    image: mysql:5.7.24
+    #imgae: mysql:8 
     container_name: '${COMPOSE_PROJECT_NAME}-${DATABASE}'
     command: --default-authentication-plugin=mysql_native_password
     restart: always
